@@ -52,14 +52,17 @@ class AggregatedHealthDataActionRunner :
     }
 
     companion object {
-        // get the midnight instant of 'daysOffset' days ago
-        fun daysToOffsetTime(daysOffset: Long): Instant {
-            val zonedDateTime = ZonedDateTime.now()
-            return zonedDateTime.minusDays(daysOffset)
-                .minusHours(zonedDateTime.hour.toLong())
-                .minusMinutes(zonedDateTime.minute.toLong())
-                .minusSeconds(zonedDateTime.second.toLong())
-                .toInstant()
+       fun daysToOffsetTime(daysOffset: Long): Instant {
+            // Get the current date/time in the device's local time zone
+            val localNow = ZonedDateTime.now()
+            // Calculate local midnight of the day 'daysOffset' days ago
+            val localMidnight = localNow.minusDays(daysOffset)
+                .withHour(0)
+                .withMinute(0)
+                .withSecond(0)
+                .withNano(0)
+            // Convert to Instant, preserving the fact that it represents local midnight
+            return localMidnight.toInstant()
         }
     }
 }
